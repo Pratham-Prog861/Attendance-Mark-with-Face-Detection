@@ -17,7 +17,7 @@ const RecognizeFaceInputSchema = z.object({
     .describe(
       "A photo of a face, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
-  enrolledFaces: z
+  enrolledStudents: z
     .array(z.object({name: z.string(), faceDataUri: z.string()}))
     .describe('An array of enrolled faces with names and face data URIs.'),
 });
@@ -45,7 +45,7 @@ Here is the photo of the face to recognize:
 {{media url=photoDataUri}}
 
 Here is the list of enrolled faces:
-{{#each enrolledFaces}}
+{{#each enrolledStudents}}
 - Name: {{this.name}}, Face: {{media url=this.faceDataUri}}
 {{/each}}
 
