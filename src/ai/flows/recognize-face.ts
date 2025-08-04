@@ -60,6 +60,9 @@ const recognizeFaceFlow = ai.defineFlow(
     outputSchema: RecognizeFaceOutputSchema,
   },
   async input => {
+    if (input.enrolledStudents.length === 0) {
+        return { name: 'Unknown' };
+    }
     const {output} = await prompt(input);
     return output!;
   }
