@@ -24,7 +24,7 @@ const RecognizeFaceInputSchema = z.object({
 export type RecognizeFaceInput = z.infer<typeof RecognizeFaceInputSchema>;
 
 const RecognizeFaceOutputSchema = z.object({
-  name: z.string().describe('The name of the recognized person, or null if not recognized.'),
+  name: z.string().describe('The name of the recognized person, or "Unknown" if not recognized.'),
 });
 export type RecognizeFaceOutput = z.infer<typeof RecognizeFaceOutputSchema>;
 
@@ -49,7 +49,7 @@ Here is the list of enrolled faces:
 - Name: {{this.name}}, Face: {{media url=this.faceDataUri}}
 {{/each}}
 
-If the face is recognized, return the name of the person. If the face is not recognized, return null.
+If the face is recognized, return the name of the person. If the face is not recognized, return "Unknown".
 `,
 });
 

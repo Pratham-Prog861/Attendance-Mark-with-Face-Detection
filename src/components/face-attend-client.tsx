@@ -35,6 +35,7 @@ import {
   VideoOff,
   ClipboardCheck,
   Users,
+  Trash2,
 } from "lucide-react";
 import { AppLogo } from "@/components/icons";
 import { ScrollArea } from "./ui/scroll-area";
@@ -192,6 +193,16 @@ export function FaceAttendClient() {
     });
   };
 
+  const handleDeleteStudent = (studentNameToDelete: string) => {
+    setEnrolledStudents((prev) =>
+      prev.filter((student) => student.name !== studentNameToDelete)
+    );
+    toast({
+      title: "Student Deleted",
+      description: `${studentNameToDelete} has been removed.`,
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background font-body">
       <header className="flex items-center justify-between p-4 border-b">
@@ -271,7 +282,10 @@ export function FaceAttendClient() {
           </div>
           <div className="md:col-span-1">
             <AttendanceList records={attendance} />
-            <EnrolledStudentsList students={enrolledStudents} />
+            <EnrolledStudentsList
+              students={enrolledStudents}
+              onDelete={handleDeleteStudent}
+            />
           </div>
         </div>
       </main>
@@ -415,7 +429,13 @@ function AttendanceList({ records }: { records: AttendanceRecord[] }) {
   );
 }
 
-function EnrolledStudentsList({ students }: { students: EnrolledStudent[] }) {
+function EnrolledStudentsList({
+  students,
+  onDelete,
+}: {
+  students: EnrolledStudent[];
+  onDelete: (name: string) => void;
+}) {
   if (students.length === 0) return null;
 
   return (
@@ -428,14 +448,34 @@ function EnrolledStudentsList({ students }: { students: EnrolledStudent[] }) {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-40">
-           <ul className="space-y-2">
-              {students.map((student, index) => (
-                <li key={index} className="flex items-center gap-3">
-                  <Image src={student.faceDataUri} alt={student.name} width={40} height={40} className="rounded-full object-cover" />
+          <ul className="space-y-2">
+            {students.map((student, index) => (
+              <li
+                key={index}
+                className="flex items-center justify-between gap-3 group"
+              >
+                <div className="flex items-center gap-3">
+                  <Image
+                    src={student.faceDataUri}
+                    alt={student.name}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover"
+                  />
                   <span className="font-medium">{student.name}</span>
-                </li>
-              ))}
-           </ul>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-8 h-8 opacity-0 group-hover:opacity-100"
+                  onClick={() => onDelete(student.name)}
+                >
+                  <Trash2 className="w-4 h-4 text-destructive" />
+                  <span className="sr-only">Delete {student.name}</span>
+                </Button>
+              </li>
+            ))}
+          </ul>
         </ScrollArea>
       </CardContent>
     </Card>
