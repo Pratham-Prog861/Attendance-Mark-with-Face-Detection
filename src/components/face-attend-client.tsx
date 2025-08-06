@@ -217,8 +217,8 @@ export function FaceAttendClient() {
   return (
     <div className="flex flex-col min-h-screen bg-background font-sans">
       {/* Improved Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex items-center gap-4">
+      <header className="sticky top-0 z-50 flex flex-col sm:flex-row items-center justify-between p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex items-center gap-4 mb-4 sm:mb-0">
           <Button variant="ghost" size="icon" asChild className="hover:bg-primary/10">
             <Link href="/">
               <ArrowLeft className="h-5 w-5" />
@@ -231,11 +231,11 @@ export function FaceAttendClient() {
             </h1>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <Button
             onClick={() => (isWebcamOn ? stopWebcam() : startWebcam())}
             variant={isWebcamOn ? "destructive" : "default"}
-            className="w-40 transition-all"
+            className="w-full sm:w-auto min-w-[140px] transition-all"
           >
             {isWebcamOn ? (
               <VideoOff className="mr-2 h-4 w-4" />
@@ -246,7 +246,7 @@ export function FaceAttendClient() {
           </Button>
           <Dialog open={isEnrollDialogOpen} onOpenChange={setIsEnrollDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="w-40">
+              <Button variant="outline" className="w-full sm:w-auto min-w-[140px]">
                 <UserPlus className="mr-2 h-4 w-4" />
                 Register Student
               </Button>
@@ -261,11 +261,11 @@ export function FaceAttendClient() {
       </header>
 
       {/* Improved Main Content */}
-      <main className="flex-grow p-6 md:p-8 max-w-7xl mx-auto w-full">
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-2 space-y-6">
+      <main className="flex-grow p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-6">
             <Card className="overflow-hidden shadow-lg border-primary/10">
-              <CardHeader>
+              <CardHeader className="p-3 sm:p-6">
                 <CardTitle className="flex items-center gap-2 text-xl font-semibold">
                   <Camera className="h-5 w-5 text-primary" />
                   Webcam Feed
@@ -274,7 +274,7 @@ export function FaceAttendClient() {
                   Position your face clearly in the frame for recognition.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-3 sm:p-6">
                 <div className="relative w-full aspect-video bg-muted rounded-lg overflow-hidden">
                   <video
                     ref={videoRef}
@@ -293,7 +293,7 @@ export function FaceAttendClient() {
                   <canvas ref={canvasRef} className="hidden" />
                 </div>
               </CardContent>
-              <CardFooter className="bg-muted/50 border-t p-4">
+              <CardFooter className="bg-muted/50 border-t p-3 sm:p-4">
                 <div className="flex items-center w-full">
                   {isProcessing && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" />
@@ -380,7 +380,7 @@ function EnrollStudentDialog({
   };
 
   return (
-    <DialogContent>
+    <DialogContent className="sm:max-w-md max-w-[95vw]">
       <DialogHeader>
         <DialogTitle>Register New Student</DialogTitle>
         <DialogDescription>
@@ -389,15 +389,15 @@ function EnrollStudentDialog({
         </DialogDescription>
       </DialogHeader>
       <div className="grid gap-4 py-4">
-        <div className="grid items-center grid-cols-4 gap-4">
-          <Label htmlFor="name" className="text-right">
+        <div className="grid items-center grid-cols-1 sm:grid-cols-4 gap-4">
+          <Label htmlFor="name" className="sm:text-right text-left">
             Name
           </Label>
           <Input
             id="name"
             value={studentName}
             onChange={(e) => setStudentName(e.target.value)}
-            className="col-span-3"
+            className="sm:col-span-3"
             placeholder="e.g. Jane Doe"
           />
         </div>
@@ -406,11 +406,12 @@ function EnrollStudentDialog({
         <Button
           onClick={handleEnrollClick}
           disabled={isEnrolling || !studentName || !isWebcamOn}
+          className="w-full sm:w-auto"
         >
           {isEnrolling ? (
-            <Loader2 />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Camera />
+            <Camera className="mr-2 h-4 w-4" />
           )}
           {isEnrolling ? "Enrolling..." : "Capture & Enroll"}
         </Button>
@@ -428,7 +429,7 @@ function AttendanceList({
 }) {
   return (
     <Card className="shadow-lg border-primary/10">
-      <CardHeader>
+      <CardHeader className="p-3 sm:p-6">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-lg font-semibold">
             <ClipboardCheck className="h-5 w-5 text-primary" />
@@ -442,13 +443,13 @@ function AttendanceList({
               className="hover:bg-destructive/10 hover:text-destructive"
             >
               <Trash2 className="h-4 w-4 mr-1" />
-              Clear
+              <span className="hidden sm:inline">Clear</span>
             </Button>
           )}
         </div>
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[300px] pr-4">
+      <CardContent className="p-3 sm:p-6">
+        <ScrollArea className="h-[200px] sm:h-[300px] pr-4">
           {records.length > 0 ? (
             <ul className="space-y-2">
               {records.map((record) => (
@@ -487,7 +488,7 @@ function EnrolledStudentsList({
 }) {
   return (
     <Card className="shadow-lg">
-      <CardHeader>
+      <CardHeader className="p-3 sm:p-6">
         <CardTitle className="flex items-center gap-2 text-xl">
           <Users />
           Enrolled Students
@@ -496,8 +497,8 @@ function EnrolledStudentsList({
           Manage the list of registered students.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-40">
+      <CardContent className="p-3 sm:p-6">
+        <ScrollArea className="h-[150px] sm:h-[200px] md:h-[250px]">
           {students.length > 0 ? (
             <ul className="space-y-2">
               {students.map((student, index) => (
@@ -513,12 +514,12 @@ function EnrolledStudentsList({
                       height={40}
                       className="rounded-full object-cover aspect-square"
                     />
-                    <span className="font-medium">{student.name}</span>
+                    <span className="font-medium truncate max-w-[120px] sm:max-w-none">{student.name}</span>
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="w-8 h-8 opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                     onClick={() => onDelete(student.name)}
                   >
                     <Trash2 className="w-4 h-4 text-destructive" />
