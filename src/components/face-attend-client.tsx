@@ -41,7 +41,6 @@ import {
 } from "lucide-react";
 import { AppLogo } from "@/components/icons";
 import { ScrollArea } from "./ui/scroll-area";
-import { Separator } from "./ui/separator";
 
 const recognitionInterval = 2000; // ms
 
@@ -217,36 +216,38 @@ export function FaceAttendClient() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background font-sans">
-      <header className="flex items-center justify-between p-4 border-b bg-card shadow-sm">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" asChild>
+      {/* Improved Header */}
+      <header className="sticky top-0 z-50 flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" asChild className="hover:bg-primary/10">
             <Link href="/">
-              <ArrowLeft />
+              <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
           <div className="flex items-center gap-2">
             <AppLogo className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            <h1 className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
               FaceAttend
             </h1>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button
             onClick={() => (isWebcamOn ? stopWebcam() : startWebcam())}
-            className="w-40"
+            variant={isWebcamOn ? "destructive" : "default"}
+            className="w-40 transition-all"
           >
             {isWebcamOn ? (
-              <VideoOff />
+              <VideoOff className="mr-2 h-4 w-4" />
             ) : (
-              <Video />
+              <Video className="mr-2 h-4 w-4" />
             )}
             {isWebcamOn ? "Stop Webcam" : "Start Webcam"}
           </Button>
           <Dialog open={isEnrollDialogOpen} onOpenChange={setIsEnrollDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" className="w-40">
-                <UserPlus />
+                <UserPlus className="mr-2 h-4 w-4" />
                 Register Student
               </Button>
             </DialogTrigger>
@@ -259,21 +260,22 @@ export function FaceAttendClient() {
         </div>
       </header>
 
-      <main className="flex-grow p-4 md:p-8">
-        <div className="grid gap-8 md:grid-cols-3">
-          <div className="md:col-span-2">
-            <Card className="overflow-hidden shadow-lg">
+      {/* Improved Main Content */}
+      <main className="flex-grow p-6 md:p-8 max-w-7xl mx-auto w-full">
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="md:col-span-2 space-y-6">
+            <Card className="overflow-hidden shadow-lg border-primary/10">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <Camera />
+                <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+                  <Camera className="h-5 w-5 text-primary" />
                   Webcam Feed
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-sm text-muted-foreground">
                   Position your face clearly in the frame for recognition.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="relative w-full aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center shadow-inner">
+                <div className="relative w-full aspect-video bg-muted rounded-lg overflow-hidden">
                   <video
                     ref={videoRef}
                     className="w-full h-full object-cover"
@@ -282,28 +284,30 @@ export function FaceAttendClient() {
                     muted
                   />
                   {!isWebcamOn && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground bg-black/50">
-                      <Camera size={48} className="mb-4" />
-                      <p>Webcam is off</p>
-                      <p className="text-sm">Click 'Start Webcam' to begin</p>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground bg-background/90 backdrop-blur-sm">
+                      <Camera size={48} className="mb-4 text-primary" />
+                      <p className="font-medium">Webcam is off</p>
+                      <p className="text-sm opacity-70">Click 'Start Webcam' to begin</p>
                     </div>
                   )}
                   <canvas ref={canvasRef} className="hidden" />
                 </div>
               </CardContent>
-              <CardFooter className="bg-muted/50 p-4">
+              <CardFooter className="bg-muted/50 border-t p-4">
                 <div className="flex items-center w-full">
                   {isProcessing && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" />
                   )}
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm font-medium text-muted-foreground">
                     {statusMessage}
                   </p>
                 </div>
               </CardFooter>
             </Card>
           </div>
-          <div className="md:col-span-1 space-y-8">
+
+          {/* Improved Sidebar */}
+          <div className="md:col-span-1 space-y-6">
             <AttendanceList records={attendance} onClear={clearAttendance} />
             <EnrolledStudentsList
               students={enrolledStudents}
@@ -423,31 +427,34 @@ function AttendanceList({
   onClear: () => void;
 }) {
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-lg border-primary/10">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-xl">
-            <ClipboardCheck />
-            Attendance
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+            <ClipboardCheck className="h-5 w-5 text-primary" />
+            Today's Attendance
           </CardTitle>
           {records.length > 0 && (
-            <Button variant="outline" size="sm" onClick={onClear}>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={onClear}
+              className="hover:bg-destructive/10 hover:text-destructive"
+            >
+              <Trash2 className="h-4 w-4 mr-1" />
               Clear
             </Button>
           )}
         </div>
-        <CardDescription>
-          Students who have been marked present today.
-        </CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-48">
+        <ScrollArea className="h-[300px] pr-4">
           {records.length > 0 ? (
-            <ul className="space-y-3">
-              {records.map((record, index) => (
+            <ul className="space-y-2">
+              {records.map((record) => (
                 <li
                   key={record.timestamp}
-                  className="flex items-center justify-between"
+                  className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50 transition-colors"
                 >
                   <span className="font-medium text-foreground">
                     {record.name}
@@ -459,8 +466,10 @@ function AttendanceList({
               ))}
             </ul>
           ) : (
-            <div className="text-center text-muted-foreground py-10">
-              <p>No students marked present yet.</p>
+            <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-10">
+              <ClipboardCheck className="h-8 w-8 mb-4 text-primary/40" />
+              <p className="font-medium">No attendance records yet</p>
+              <p className="text-sm opacity-70">Records will appear here when students are marked present</p>
             </div>
           )}
         </ScrollArea>
